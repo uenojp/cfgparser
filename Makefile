@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -g -O2 -std=c++17
 
-SRCS = $(wildcard *.cpp)
+SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 run: cfgparser

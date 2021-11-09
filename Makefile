@@ -13,6 +13,9 @@ run: cfgparser
 cfgparser: $(OBJS)
 	$(CC) $(CFLAGS) -o cfgparser $(OBJS)
 
+%.o: %.cpp
+	$(CC) $(CFLAGS) -o $@ -c $<
+
 test/test_%.exe: test/test_%.cpp $(filter-out src/main.cpp, $(SRCS))
 	$(CC) $(CFLAGS) -o $@ $^
 

@@ -4,7 +4,10 @@
 #include "cfgparser.h"
 
 int main() {
-    std::string s = "I saw a girl with a telescope.";
+    CkyParser p(Config{
+        dict : "./asset/dict1",
+        rule : "./asset/rule1",
+    });
 
     return 0;
 }

@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -g -O2 -std=c++17
+CFLAGS = -Wall -g -O2 -std=c++2a
 
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
@@ -16,7 +16,7 @@ cfgparser: $(OBJS)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-test/test_%.exe: test/test_%.cpp $(filter-out src/main.cpp, $(SRCS))
+test/test_%.exe: test/test_%.cpp $(filter-out src/main.o, $(OBJS))
 	$(CC) $(CFLAGS) -o $@ $^
 
 test: $(TESTS)

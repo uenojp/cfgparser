@@ -1,7 +1,7 @@
 #include "test.h"
 
 int main() {
-    Dictionary d("./asset/dict1");
+    Lexicon d("./asset/dict1");
 
     assert(d.look_up("the") == Pos::DET);
     assert(d.look_up("child") == Pos::NOUN);

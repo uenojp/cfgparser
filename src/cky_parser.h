@@ -26,9 +26,6 @@ struct Config {
 class CkyParser {
    private:
     std::vector<std::vector<std::set<Cell>>> table;
-    std::set<Pos> terminals;
-    std::set<Pos> nonterminals;
-    std::multimap<std::pair<Pos, Pos>, Pos> rules;
 
    public:
     CkyParser(const Config &confg);

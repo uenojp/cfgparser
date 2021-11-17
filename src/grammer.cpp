@@ -1,7 +1,17 @@
 #include "grammer.h"
 
-using enum Pos;
-Grammer::Grammer(const std::string& filename) : terminals(std::set<Pos>{NOUN, DET, VERB, ADJ, ADV, PREP}), nonterminals(std::set<Pos>{S, NP, VP, PP, SS}), start(S) {
+Rule::Rule(Pos x, Pos y, Pos z) : X(x), Y(y), Z(z) {}
+
+bool Rule::operator<(const Rule& r) const {
+    return X < r.X || (X == r.X && Y < r.Y) || (X == r.X && Y == r.Y && Z < r.Z);
+}
+
+std::ostream& operator<<(std::ostream& os, const Rule& rule) {
+    os << "(" << rule.X << ", " << rule.Y << ", " << rule.Z << ")";
+    return os;
+}
+
+Grammer::Grammer(const std::string& filename) : terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}), start(Pos::S) {
     load_rules(filename);
 }
 
@@ -12,25 +22,29 @@ bool Grammer::load_rules(const std::string& filename) {
         return false;
     }
 
-    std::fstream file(filename);
     std::string line;
     while (std::getline(file, line)) {
         auto rule = split(line, ' ');
         std::size_t len = rule.size();
 
-        if (len == 2) { /* X -> a, a \in \Sigma */
-            // TODO: 直接終端文字列を指す規則の処理
-        } else if (len == 3) { /* X -> YZ */
+        /* X -> a, a \in \Sigma */
+        /* X -> YZ */
+        if (len == 2 || len == 3) {
             Pos X = to_pos(rule[0]);
             Pos Y = to_pos(rule[1]);
-            Pos Z = to_pos(rule[2]);
-            if (X == UNKNOWN || Y == UNKNOWN || Z == UNKNOWN) {
+            Pos Z = Pos::UNKNOWN;
+            if (len == 3) {
+                Z = to_pos(rule[2]);
+            }
+            if (X == Pos::UNKNOWN || Y == Pos::UNKNOWN || (Z == Pos::UNKNOWN && len == 3)) {
                 std::cerr << "Error: invalid rule " << line << std::endl;
                 return false;
             }
-            this->rules.push_back(Rule{X, Y, Z});
+            this->rules.emplace(Rule{X, Y, Z});
         } else {
             std::cerr << "Error: invalid format " << line << std::endl;
+            return false;
         }
     }
+    return true;
 }

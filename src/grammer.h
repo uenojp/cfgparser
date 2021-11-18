@@ -34,4 +34,5 @@ class Grammer {
     std::set<Rule> rules;
 
     Grammer(const std::string& filename);
+    bool has_rule(Pos X, Pos Y, Pos Z) const;
 };

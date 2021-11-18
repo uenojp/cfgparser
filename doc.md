@@ -1,6 +1,6 @@
 ## class GkyParser
 - Memberes
-  - table: `std::vector<Cell>`
+  - table: `std::vector<std::vector<<Cell>>`
   - grammer: `Grammer`
   - lexcon: `Lexcon`
 - Methods
@@ -16,7 +16,7 @@
 
 ## class Cell
 - Member
-  - entries: `std::set<Entry>`
+  - entries: `std::vector<Entry>`
 
 ## class Entry
 - pos: `Pos`

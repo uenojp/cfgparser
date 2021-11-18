@@ -48,3 +48,7 @@ bool Grammer::load_rules(const std::string& filename) {
     }
     return true;
 }
+
+bool Grammer::has_rule(Pos X, Pos Y, Pos Z) const {
+    return this->rules.contains(Rule{X, Y, Z});
+}

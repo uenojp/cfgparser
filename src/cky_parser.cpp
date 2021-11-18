@@ -2,10 +2,4 @@
 
 #include <string>
 
-CkyParser::CkyParser(const Config &config) {
-    // this->config = config;
-    // this->grammar = new Grammar(config);
-    // this->lexicon = new Lexicon(config);
-    // this->sentence = new Sentence(config);
-    // this->parser = new Parser(config);
-}
+CkyParser::CkyParser(const Config &config) : grammer(Grammer(config.dict)), lexicon(Lexicon(config.rule)) {}

@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "grammer.h"
+#include "lexicon.h"
 #include "type.h"
 
 class Entry {
@@ -28,5 +30,9 @@ class CkyParser {
     std::vector<std::vector<std::set<Cell>>> table;
 
    public:
+    Grammer grammer;
+    Lexicon lexicon;
+
     CkyParser(const Config &confg);
+    bool parse(const std::string &sentence);
 };

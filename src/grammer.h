@@ -17,7 +17,7 @@ class Rule {
     const Pos Y;
     const Pos Z;
 
-    Rule(Pos x, Pos y, Pos z);
+    Rule(Pos x, Pos y, Pos z) : X(x), Y(y), Z(z) {}
     bool operator<(const Rule& other) const;
 };
 

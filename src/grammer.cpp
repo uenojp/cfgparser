@@ -1,7 +1,5 @@
 #include "grammer.h"
 
-Rule::Rule(Pos x, Pos y, Pos z) : X(x), Y(y), Z(z) {}
-
 bool Rule::operator<(const Rule& r) const {
     return X < r.X || (X == r.X && Y < r.Y) || (X == r.X && Y == r.Y && Z < r.Z);
 }

@@ -9,13 +9,19 @@
 
 class Lexicon {
    private:
+    /* 単語辞書 */
     std::unordered_map<std::string, Pos> lexicon;
 
    public:
     Lexicon(const std::string& filename);
-    bool add(const std::string& word, const Pos& pos);
-    Pos look_up(std::string word) const;
 
+    /* 単語wordの品詞posを辞書に登録する */
+    bool add(const std::string& word, const Pos& pos);
+
+    /* 単語wordの品詞を返す */
+    Pos look_up(const std::string& word) const;
+
+    /* 読み取り専用のiteratorを返す */
     auto begin() const -> decltype(lexicon.cbegin());
     auto end() const -> decltype(lexicon.cend());
 };

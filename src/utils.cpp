@@ -29,6 +29,6 @@ std::ostream& operator<<(std::ostream& os, const std::set<T>& v) {
 }
 
 template <typename T, typename U>
-std::ostream& operator<<(std::ostream& os, const std::pair<T, U> p) {
+std::ostream& operator<<(std::ostream& os, const std::pair<T, U>& p) {
     return os << "[ " << p.first << " " << p.second << " ]";
 }

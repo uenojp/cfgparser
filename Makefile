@@ -7,9 +7,6 @@ OBJS = $(SRCS:.cpp=.o)
 TEST_SRCS = $(wildcard test/*.cpp)
 TESTS = $(TEST_SRCS:.cpp=.exe)
 
-run: cfgparser
-	./cfgparser
-
 cfgparser: $(OBJS)
 	$(CC) $(CFLAGS) -o cfgparser $(OBJS)
 

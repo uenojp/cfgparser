@@ -3,12 +3,12 @@
 void cout_test();
 
 int main() {
-    CkyParser p1(Config{dict : "./asset/dict1", rule : "./asset/rule1"});
+    CkyParser p1(Config{grammar : "./asset/grammar1", lexicon : "./asset/lexicon1"});
     assert(p1.parse("the child runs quickly to the large house").ok);
     assert(!p1.parse("the runs").ok);
     assert(!p1.parse("").ok);
 
-    CkyParser p2(Config{dict : "./asset/dict2", rule : "./asset/rule2"});
+    CkyParser p2(Config{grammar : "./asset/grammar2", lexicon : "./asset/lexicon2"});
     assert(p2.parse("I saw a girl with a telescope").ok);
     assert(!p2.parse("I saw saw").ok);
     assert(!p2.parse("").ok);

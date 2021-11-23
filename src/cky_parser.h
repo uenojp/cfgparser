@@ -35,8 +35,8 @@ std::ostream& operator<<(std::ostream& os, const Cell& cell);
 
 /* パーザ用の設定データ(文法規則と単語辞書のパス) */
 struct Config {
-    std::string dict;
-    std::string rule;
+    std::string grammar;
+    std::string lexicon;
 };
 
 /* パース結果 */
@@ -61,7 +61,7 @@ class CkyParser {
     Grammar grammar;
     Lexicon lexicon;
 
-    CkyParser(const Config& config) : grammar(Grammar(config.rule)), lexicon(Lexicon(config.dict)) {}
+    CkyParser(const Config& config) : grammar(Grammar(config.grammar)), lexicon(Lexicon(config.lexicon)) {}
     Result parse(const std::string& sentence);
     void show_table();
 };

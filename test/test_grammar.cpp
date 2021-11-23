@@ -1,7 +1,7 @@
 #include "test.h"
 
 int main() {
-    Grammar g("./asset/rule1");
+    Grammar g("./asset/grammar1");
 
     assert(g.rules.contains(Rule{Pos::S, Pos::NP, Pos::VP}));
     assert(g.rules.contains(Rule{Pos::NP, Pos::DET, Pos::NOUN}));

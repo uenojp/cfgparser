@@ -20,7 +20,8 @@
 
 ## class Entry
 - pos: `Pos`
-- backpointers: `std::pair<int, int>`
+- left: `std::pair<int, int>`
+- right: `std::pair<int, int>`
 
 ## struct Rule
 - X: `Pos`

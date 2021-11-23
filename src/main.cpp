@@ -4,10 +4,13 @@
 #include "cfgparser.h"
 
 int main() {
-    CkyParser p(Config{
-        dict : "./asset/dict1",
-        rule : "./asset/rule1",
+    CkyParser parser(Config{
+        dict : "./asset/dict2",
+        rule : "./asset/rule2",
     });
+
+    parser.parse("I saw a girl with a telescope");
+    parser.show_table();
 
     return 0;
 }

@@ -14,8 +14,9 @@
 class Entry {
    public:
     Pos pos;
-    std::pair<int, int> backpointers;
-    Entry(Pos pos, std::pair<int, int> backpointers) : pos(pos), backpointers(backpointers) {}
+    std::pair<int, int> left;
+    std::pair<int, int> right;
+    Entry(Pos pos, std::pair<int, int> left, std::pair<int, int> right) : pos(pos), left(left), right(right) {}
 };
 
 std::ostream& operator<<(std::ostream& os, const Entry& entry);
@@ -39,7 +40,7 @@ class CkyParser {
     std::vector<std::vector<Cell>> table;
 
     void init_table(const std::vector<std::string>& words);
-    void fill_table(std::size_t);
+    void fill_table(std::size_t len);
     void fill_cell(int i, int j);
     void combine_cells(int i, int j, int k);
 

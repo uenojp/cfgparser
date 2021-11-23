@@ -10,10 +10,10 @@ std::ostream& operator<<(std::ostream& os, const Rule& rule) {
 }
 
 Grammar::Grammar(const std::string& filename) : terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}), start(Pos::S) {
-    load_rules(filename);
+    load_grammar(filename);
 }
 
-bool Grammar::load_rules(const std::string& filename) {
+bool Grammar::load_grammar(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;

@@ -31,7 +31,7 @@ std::ostream& operator<<(std::ostream& os, const Rule& other);
 class Grammar {
    private:
     /* 文法規則をファイルからロード */
-    bool load_rules(const std::string& filename);
+    bool load_grammar(const std::string& filename);
 
    public:
     const std::set<Pos> terminals;

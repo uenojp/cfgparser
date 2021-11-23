@@ -4,14 +4,14 @@ void cout_test();
 
 int main() {
     CkyParser p1(Config{dict : "./asset/dict1", rule : "./asset/rule1"});
-    assert(p1.parse("the child runs quickly to the large house"));
-    assert(!p1.parse("the runs"));
-    assert(!p1.parse(""));
+    assert(p1.parse("the child runs quickly to the large house").ok);
+    assert(!p1.parse("the runs").ok);
+    assert(!p1.parse("").ok);
 
     CkyParser p2(Config{dict : "./asset/dict2", rule : "./asset/rule2"});
-    assert(p2.parse("I saw a girl with a telescope"));
-    assert(!p2.parse("I saw saw"));
-    assert(!p2.parse(""));
+    assert(p2.parse("I saw a girl with a telescope").ok);
+    assert(!p2.parse("I saw saw").ok);
+    assert(!p2.parse("").ok);
 
     // cout_test();
 

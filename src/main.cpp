@@ -9,8 +9,24 @@ int main() {
         rule : "./asset/rule2",
     });
 
-    parser.parse("I saw a girl with a telescope");
+    // std::string sentence = "the child runs quickly to the large house";
+    // std::string sentence = "I saw a girl with a telescope";
+    std::string sentence = "";
+    auto result = parser.parse(sentence);
+
     parser.show_table();
+
+    if (result.ok) {
+        std::cout << std::endl
+                  << "\"" << sentence << "\" "
+                  << "is the correct sentence." << std::endl;
+    } else {
+        std::cout << std::endl
+                  << "\"" << sentence << "\" "
+                  << "is NOT the correct sentence." << std::endl;
+    }
+
+    std::cout << std::endl << result.s_expression << std::endl;
 
     return 0;
 }

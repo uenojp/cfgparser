@@ -2,9 +2,9 @@
 
 #include <iomanip>
 
-bool CkyParser::parse(const std::string &sentence) {
+Result CkyParser::parse(const std::string &sentence) {
     if (sentence.empty()) {
-        return false;
+        return Result{ok : false, s_expression : ""};
     }
 
     const auto words = split(sentence, ' ');
@@ -25,7 +25,7 @@ bool CkyParser::parse(const std::string &sentence) {
                               return e.pos == this->grammar.start;
                           }) != entries.end();
 
-    return is_grammatical;
+    return Result{ok : is_grammatical, s_expression : derive_s_expression(words)};
 }
 
 void CkyParser::init_table(const std::vector<std::string> &words) {
@@ -88,6 +88,90 @@ void CkyParser::show_table() {
         }
         std::cout << std::endl;
     }
+}
+
+/* modelの中の文字列tagを後ろからreplacementsの要素に徐々に置き換えていく
+ * 例えば、
+ *  model        : "{{tag}} foo {{tag}} {{tag}} bar {{tag}}"
+ *  tag          : "{{tag}}"
+ *  replacements : {"one", "two", "three"}
+ * のとき
+ *  result : "{{tag}} foo one two bar three"  */
+std::string sequential_replace_from_tail(const std::string &model, const std::string &tag, const std::vector<std::string> &replacements) {
+    std::string result = model;
+
+    // replacementsの末尾から走査するためのイテレータ
+    auto it = replacements.rbegin();
+
+    std::size_t found = model.rfind(tag);
+    if (found == std::string::npos) {
+        return result;
+    }
+
+    while (found != std::string::npos) {
+        result.replace(found, tag.size(), *it);
+        it++;
+        found = result.rfind(tag, found);
+    }
+
+    return result;
+}
+
+std::string CkyParser::derive_s_expression(const std::vector<std::string> &words) {
+    // 上三角行列の最右、最上のセルを取得
+    auto cell = this->table[0][words.size() - 1];
+    // cellの中から、エントリにPos::Sがあるものを探す
+    auto start_entry_it = std::find_if(cell.entries.begin(), cell.entries.end(), [&](Entry e) {
+        return e.pos == this->grammar.start;
+    });
+    if (start_entry_it == cell.entries.end()) {
+        return "";
+    }
+
+    std::string s_expression;
+    derive_s_expression(*start_entry_it, s_expression);
+
+    s_expression = "(S" + s_expression + ")";
+
+    return sequential_replace_from_tail(s_expression, "{{word}}", words);
+}
+
+/*
+ *             S
+ *            / \
+ *          NP  VP
+ *         / \    \
+ *        DT  N    V
+ *       the child runs
+ *
+ * S(NP(DT(the)
+ *      N(child))
+ *   VP(V(runs)))
+ */
+
+void CkyParser::derive_s_expression(Entry &entry, std::string &s_expression) {
+    if (entry.left.first == -1) {
+        s_expression += " {{word}}";
+        return;
+    }
+
+    Entry left;
+    Entry right;
+    try {
+        left = this->table[entry.left.first][entry.left.second].entries.at(0);
+        right = this->table[entry.right.first][entry.right.second].entries.at(0);
+
+    } catch (const std::exception &e) { std::cerr << "unreachable" << e.what() << std::endl; }
+
+    s_expression += "(";
+    s_expression += to_string(left.pos);
+    derive_s_expression(left, s_expression);
+    s_expression += ")";
+
+    s_expression += "(";
+    s_expression += to_string(right.pos);
+    derive_s_expression(right, s_expression);
+    s_expression += ")";
 }
 
 std::ostream &operator<<(std::ostream &os, const Cell &cell) {

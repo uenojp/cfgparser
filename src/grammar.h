@@ -23,7 +23,7 @@ class Rule {
 
 std::ostream& operator<<(std::ostream& os, const Rule& other);
 
-class Grammer {
+class Grammar {
    private:
     bool load_rules(const std::string& filename);
 
@@ -33,6 +33,6 @@ class Grammer {
     const Pos start;
     std::set<Rule> rules;
 
-    Grammer(const std::string& filename);
+    Grammar(const std::string& filename);
     bool has_rule(Pos X, Pos Y, Pos Z) const;
 };

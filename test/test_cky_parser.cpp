@@ -19,12 +19,12 @@ int main() {
 }
 
 void cout_test() {
-    Entry e(Pos::NOUN, std::make_pair(-1, -1));
+    Entry e(Pos::NOUN, std::make_pair(-1, -1), std::make_pair(-1, -1));
     std::cout << e << '\n';
 
     Cell c(std::vector<Entry>{
-        Entry(Pos::NOUN, std::make_pair(1, 1)),
-        Entry(Pos::VERB, std::make_pair(2, 2)),
+        Entry(Pos::NOUN, std::make_pair(1, 1), std::make_pair(1, 1)),
+        Entry(Pos::VERB, std::make_pair(2, 2), std::make_pair(2, 2)),
     });
     std::cout << c << '\n';
 }

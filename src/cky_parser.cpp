@@ -22,7 +22,7 @@ bool CkyParser::parse(const std::string &sentence) {
     const auto &entries = this->table[0][len - 1].entries;
     // 最右上に`Pos::S`があれば正文、そうでなければ非文
     bool is_grammatical = std::find_if(entries.begin(), entries.end(), [&](Entry e) {
-                              return e.pos == this->grammer.start;
+                              return e.pos == this->grammar.start;
                           }) != entries.end();
 
     return is_grammatical;
@@ -41,7 +41,7 @@ void CkyParser::init_table(const std::vector<std::string> &words) {
     for (i = 0; i < words.size(); i++) {
         // TODO: entriesのエラーチェック
         Pos pos = this->table[i][i].entries[0].pos;
-        for (const auto rule : this->grammer.rules) {
+        for (const auto rule : this->grammar.rules) {
             // X -> YでYが狭義の品詞(NOUNとかVERBとか)のとき、Xを追加
             // 例えば、VP -> VERBのとき、VERBのセルにVPを追加
             if (is_nonterminal(rule.X) && is_terminal(rule.Y) && rule.Z == Pos::UNKNOWN) {
@@ -71,8 +71,8 @@ void CkyParser::fill_cell(int i, int j) {
 void CkyParser::combine_cells(int i, int k, int j) {
     for (const auto &[Y, _l, _r] : this->table[i][k].entries) {
         for (const auto &[Z, _l, _r] : this->table[k + 1][j].entries) {
-            for (const auto &X : this->grammer.nonterminals) {
-                if (this->grammer.has_rule(X, Y, Z)) {
+            for (const auto &X : this->grammar.nonterminals) {
+                if (this->grammar.has_rule(X, Y, Z)) {
                     Entry entry(X, std::make_pair(i, k), std::make_pair(k + 1, j));
                     this->table[i][j].entries.push_back(entry);
                 }

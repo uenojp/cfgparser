@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "grammer.h"
+#include "grammar.h"
 #include "lexicon.h"
 #include "type.h"
 #include "utils.h"
@@ -45,10 +45,10 @@ class CkyParser {
     void combine_cells(int i, int j, int k);
 
    public:
-    Grammer grammer;
+    Grammar grammar;
     Lexicon lexicon;
 
-    CkyParser(const Config& config) : grammer(Grammer(config.rule)), lexicon(Lexicon(config.dict)) {}
+    CkyParser(const Config& config) : grammar(Grammar(config.rule)), lexicon(Lexicon(config.dict)) {}
     bool parse(const std::string& sentence);
     void show_table();
 };

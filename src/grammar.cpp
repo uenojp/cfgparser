@@ -1,4 +1,4 @@
-#include "grammer.h"
+#include "grammar.h"
 
 bool Rule::operator<(const Rule& r) const {
     return X < r.X || (X == r.X && Y < r.Y) || (X == r.X && Y == r.Y && Z < r.Z);
@@ -9,11 +9,11 @@ std::ostream& operator<<(std::ostream& os, const Rule& rule) {
     return os;
 }
 
-Grammer::Grammer(const std::string& filename) : terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}), start(Pos::S) {
+Grammar::Grammar(const std::string& filename) : terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}), start(Pos::S) {
     load_rules(filename);
 }
 
-bool Grammer::load_rules(const std::string& filename) {
+bool Grammar::load_rules(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;
@@ -47,6 +47,6 @@ bool Grammer::load_rules(const std::string& filename) {
     return true;
 }
 
-bool Grammer::has_rule(Pos X, Pos Y, Pos Z) const {
+bool Grammar::has_rule(Pos X, Pos Y, Pos Z) const {
     return this->rules.contains(Rule{X, Y, Z});
 }

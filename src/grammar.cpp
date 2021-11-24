@@ -24,9 +24,9 @@ bool Grammar::load_grammar(const std::string& filename) {
     std::string line;
     while (std::getline(file, line)) {
         /* ファイルから読み込んだ
-         *  <POS> <POS> <POS>
+         *  <品詞> <品詞> <品詞>
          * もしくは
-         *  <POS> <POS>
+         *  <品詞> <品詞>
          * を空白でsplitする */
         const auto rule = split(line, ' ');
         const std::size_t len = rule.size();

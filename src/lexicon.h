@@ -12,6 +12,9 @@ class Lexicon {
     /* 単語辞書 */
     std::unordered_map<std::string, Pos> lexicon;
 
+    /* 文法規則をファイルからロード */
+    bool load(const std::string& filename);
+
    public:
     Lexicon(const std::string& filename);
 

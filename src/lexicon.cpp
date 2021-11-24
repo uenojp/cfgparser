@@ -1,14 +1,19 @@
 #include "lexicon.h"
 
 Lexicon::Lexicon(const std::string& filename) {
+    load(filename);
+}
+
+bool Lexicon::load(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "could not open " << filename << std::endl;
+        return false;
     }
     /* ファイルから一行ずつ読み込み、単語と品詞を単語辞書へ登録 */
     std::string line;
     while (std::getline(file, line)) {
-        /* <WORD> <POS> を空白でsplitする */
+        /* <単語> <品詞> を空白でsplitする */
         auto word_pos = split(line, ' ');
         if (word_pos.size() != 2)
             continue;
@@ -17,6 +22,7 @@ Lexicon::Lexicon(const std::string& filename) {
             continue;
         this->add(word_pos[0], pos);
     }
+    return true;
 }
 
 bool Lexicon::add(const std::string& word, const Pos& pos) {

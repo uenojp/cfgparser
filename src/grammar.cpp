@@ -20,17 +20,21 @@ bool Grammar::load_grammar(const std::string& filename) {
         return false;
     }
 
+    /* ファイルから一行ずつ読み込み、遷移規則を文法として追加 */
     std::string line;
     while (std::getline(file, line)) {
-        auto rule = split(line, ' ');
-        std::size_t len = rule.size();
+        /* ファイルから読み込んだ
+         *  <POS> <POS> <POS>
+         * もしくは
+         *  <POS> <POS>
+         * を空白でsplitする */
+        const auto rule = split(line, ' ');
+        const std::size_t len = rule.size();
 
-        /* X -> a, a \in \Sigma */
-        /* X -> YZ */
         if (len == 2 || len == 3) {
             Pos X = to_pos(rule[0]);
             Pos Y = to_pos(rule[1]);
-            Pos Z = Pos::UNKNOWN;
+            Pos Z = Pos::UNKNOWN; /* 品詞が2列のみ(X -> Y)の場合ZはPos::UNKNOWN */
             if (len == 3) {
                 Z = to_pos(rule[2]);
             }

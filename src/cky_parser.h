@@ -11,6 +11,11 @@
 #include "type.h"
 #include "utils.h"
 
+/* EntryはCKY表の各セルに入る品詞と2つの導出元のポインタを持つ
+ *
+ * 例えば、あるCKY表のあるセルが
+ *  [NP(1,1)(2,6) PP(1,2)(3,6)  ]
+ * のとき、VERB(1,1)(2,6)やVP(1,2)(3,6)それぞれがエントリ */
 class Entry {
    public:
     Pos pos;
@@ -23,6 +28,10 @@ class Entry {
 
 std::ostream& operator<<(std::ostream& os, const Entry& entry);
 
+/* CellはCKY表の各セルで、複数のエントリを持つ
+ *
+ * 例えば、以下のように複数のエントリを持つ
+ *  [NP(1,1)(2,6) PP(1,2)(3,6)  ] */
 class Cell {
    public:
     std::vector<Entry> entries;
@@ -47,21 +56,35 @@ struct Result {
 
 class CkyParser {
    private:
-    std::vector<std::vector<Cell>> table;
+    std::vector<std::vector<Cell>> table; /* CKY表 */
 
+    /* CKY表を初期化する */
     void init_table(const std::vector<std::string>& words);
-    void fill_table(std::size_t len);
-    void fill_cell(int i, int j);
-    void combine_cells(int i, int j, int k);
 
+    /* CKY表を埋める */
+    void fill_table(std::size_t len);
+
+    /* CKY表のセル(i, j)を埋める */
+    void fill_cell(std::size_t i, std::size_t j);
+
+    /* セル(i,k)とセル(k+1,j)を結合する */
+    void combine_cells(std::size_t i, std::size_t k, std::size_t j);
+
+    /* CKY表からS式を導く */
     std::string derive_s_expression(const std::vector<std::string>& words);
-    void derive_s_expression(Entry& entry, std::string& s_expression);
+    /* DFS用 */
+    void derive_s_expression(const Entry& entry, std::string& s_expression);
 
    public:
-    Grammar grammar;
-    Lexicon lexicon;
+    Grammar grammar; /* 文法 */
+    Lexicon lexicon; /* 単語辞書 */
 
     CkyParser(const Config& config) : grammar(Grammar(config.grammar)), lexicon(Lexicon(config.lexicon)) {}
     Result parse(const std::string& sentence);
+
+    /* CKY表を出力する */
     void show_table();
+
+    /* CKY表をエントリのポインタ含めて出力する */
+    void show_table_with_detail();
 };

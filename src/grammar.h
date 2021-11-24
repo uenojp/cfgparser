@@ -34,13 +34,13 @@ class Grammar {
     bool load_grammar(const std::string& filename);
 
    public:
-    const std::set<Pos> terminals;
-    const std::set<Pos> nonterminals;
-    const Pos start;
+    const std::set<Pos> terminals;    /* 終端記号 */
+    const std::set<Pos> nonterminals; /*非終端記号 */
+    const Pos start;                  /*初期記号 */
     std::set<Rule> rules;
 
     Grammar(const std::string& filename);
 
-    /* X -> Yという文法規則の存在判定 */
+    /* X -> YZという文法規則の存在判定 */
     bool has_rule(Pos X, Pos Y, Pos Z) const;
 };

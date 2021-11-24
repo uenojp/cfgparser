@@ -1,6 +1,3 @@
-#include <iostream>
-#include <string>
-
 #include "cfgparser.h"
 
 int main(int argc, char** argv) {
@@ -24,7 +21,8 @@ int main(int argc, char** argv) {
 
     auto result = parser.parse(sentence);
 
-    parser.show_table();
+    /* CKY表を表示 */
+    parser.show_table_with_detail();
 
     if (result.ok) {
         std::cout << std::endl

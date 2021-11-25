@@ -22,7 +22,8 @@ int main(int argc, char** argv) {
     auto result = parser.parse(sentence);
 
     /* CKY表を表示 */
-    parser.show_table();
+    // parser.show_table();
+    parser.show_table_with_detail();
 
     if (result.ok) {
         std::cout << std::endl

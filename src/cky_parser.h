@@ -21,9 +21,12 @@ class Entry {
     Pos pos;
     std::pair<int, int> left;
     std::pair<int, int> right;
+    int left_id;
+    int right_id;
+    int id;
 
     Entry(){};
-    Entry(Pos pos, std::pair<int, int> left, std::pair<int, int> right) : pos(pos), left(left), right(right) {}
+    Entry(Pos pos, std::pair<int, int> left, std::pair<int, int> right, int left_id, int right_id);
 };
 
 std::ostream& operator<<(std::ostream& os, const Entry& entry);

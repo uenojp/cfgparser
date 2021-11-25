@@ -1,5 +1,15 @@
 #include "cky_parser.h"
 
+#include <random>
+
+std::random_device rd;
+std::default_random_engine engine(rd());
+std::uniform_int_distribution<int> dist(0, 999);
+
+Entry::Entry(Pos pos, std::pair<int, int> left, std::pair<int, int> right, int left_id, int right_id) : pos(pos), left(left), right(right), left_id(left_id), right_id(right_id) {
+    id = dist(engine);
+}
+
 /* 英文sentenceをCKYアルゴリズムで解析し、解析結果をS式として返す
  * ref. https://courses.engr.illinois.edu/cs447/fa2018/Slides/Lecture09.pdf */
 Result CkyParser::parse(const std::string &sentence) {
@@ -52,7 +62,7 @@ void CkyParser::init_table(const std::vector<std::string> &words) {
 
     /* 対角線に単語の品詞を追加する */
     for (std::size_t i = 0; const auto &word : words) {
-        Entry entry(this->lexicon.look_up(word), std::make_pair(-1, -1), std::make_pair(-1, -1));
+        Entry entry(this->lexicon.look_up(word), std::make_pair(-1, -1), std::make_pair(-1, -1), -1, -1);
         this->table[i][i].entries.push_back(entry);
         i++;
     }
@@ -66,7 +76,7 @@ void CkyParser::init_table(const std::vector<std::string> &words) {
              * 例えば、VP -> VERBのとき、VERBのセルにVPを追加 */
             if (is_nonterminal(rule.X) && is_terminal(rule.Y) && rule.Z == Pos::UNKNOWN) {
                 if (rule.Y == pos) {
-                    Entry entry(rule.X, std::make_pair(-1, -1), std::make_pair(-1, -1));
+                    Entry entry(rule.X, std::make_pair(-1, -1), std::make_pair(-1, -1), -1, -1);
                     this->table[i][i].entries.push_back(entry);
                 }
             }
@@ -111,12 +121,12 @@ void CkyParser::fill_cell(std::size_t i, std::size_t j) {
  * k+1                 [NOUN]
  *                      ... */
 void CkyParser::combine_cells(std::size_t i, std::size_t k, std::size_t j) {
-    for (const auto &[Y, _l, _r] : this->table[i][k].entries) {
-        for (const auto &[Z, _l, _r] : this->table[k + 1][j].entries) {
+    for (const auto &[Y, _l, _r, _lid, _rid, left_id] : this->table[i][k].entries) {
+        for (const auto &[Z, _l, _r, _lid, _rid, right_id] : this->table[k + 1][j].entries) {
             for (const auto &X : this->grammar.nonterminals) {
                 if (this->grammar.has_rule(X, Y, Z)) {
                     /* CKY表を埋めた後、右上からたどってS式を導けるよう、セルのインデックスを持たせる */
-                    Entry entry(X, std::make_pair(i, k), std::make_pair(k + 1, j));
+                    Entry entry(X, std::make_pair(i, k), std::make_pair(k + 1, j), left_id, right_id);
                     this->table[i][j].entries.push_back(entry);
                 }
             }
@@ -176,7 +186,7 @@ std::string sequential_replace_from_tail(const std::string &model, const std::st
         return result;
     }
 
-    while (found != std::string::npos) {
+    while (found != std::string::npos && it != replacements.rend()) {
         result.replace(found, tag.size(), *it);
         it++;
         found = result.rfind(tag, found);
@@ -189,22 +199,22 @@ std::string CkyParser::derive_s_expression(const std::vector<std::string> &words
     /* 上三角行列の右上のセルを取得 */
     const auto cell = this->table[0][words.size() - 1];
     /* cellの中から、Pos::Sを持つエントリを探す */
-    const auto start_entry_it = std::find_if(cell.entries.begin(), cell.entries.end(), [&](Entry e) {
-        return e.pos == this->grammar.start;
-    });
-    /* 右上のセルにPos:Sがなければ、正文ではないので空の文字列を返す */
-    if (start_entry_it == cell.entries.end()) {
-        return "";
-    }
 
     std::string s_expression;
-    /* Pos::SからDFS */
-    derive_s_expression(*start_entry_it, s_expression);
+    for (const auto &entry : cell.entries) {
+        std::string s;
+        if (entry.pos == this->grammar.start) {
+            /* Pos::SからDFS */
+            derive_s_expression(entry, s);
+            s = "(S" + s + ")";
+            /* {{word}}を与えられた文字に変換して返す */
+            s_expression += sequential_replace_from_tail(s, "{{word}}", words);
+            s_expression += "\n";
+        }
+    }
+    std::cout << s_expression << std::endl;
 
-    s_expression = "(S" + s_expression + ")";
-
-    /* {{word}}を与えられた文字に変換して返す */
-    return sequential_replace_from_tail(s_expression, "{{word}}", words);
+    return s_expression;
 }
 
 /* 与えられたエントリからDFSをしてS式を導出する
@@ -228,8 +238,25 @@ void CkyParser::derive_s_expression(const Entry &entry, std::string &s_expressio
     }
 
     // TODO: 境界の処理
-    const Entry left = this->table[entry.left.first][entry.left.second].entries[0];
-    const Entry right = this->table[entry.right.first][entry.right.second].entries[0];
+    std::vector<Entry> left_entries = this->table[entry.left.first][entry.left.second].entries;
+    auto left_it = std::find_if(left_entries.begin(), left_entries.end(), [&](Entry e) {
+        return e.id == entry.left_id;
+    });
+    if (left_it == left_entries.end()) {
+        return;
+    }
+    const Entry left = *left_it;
+    // const Entry left = left_entries[0];
+
+    std::vector<Entry> right_entries = this->table[entry.right.first][entry.right.second].entries;
+    auto right_it = std::find_if(right_entries.begin(), right_entries.end(), [&](Entry e) {
+        return e.id == entry.right_id;
+    });
+    if (right_it == right_entries.end()) {
+        return;
+    }
+    const Entry right = *right_it;
+    // const Entry right = right_entries[0];
 
     /* 左の部分木を走査 */
     s_expression += "(";
@@ -246,7 +273,7 @@ void CkyParser::derive_s_expression(const Entry &entry, std::string &s_expressio
 
 std::ostream &operator<<(std::ostream &os, const Cell &cell) {
     /* Cellを[NOUN(2,3) VP(2,3)]のフォーマットで表示 */
-    const int cell_width = 38; /* セルの表示幅 */
+    const int cell_width = 42; /* セルの表示幅 */
     os << std::left << "[";
     bool first = true;
     std::string entries;
@@ -254,6 +281,7 @@ std::ostream &operator<<(std::ostream &os, const Cell &cell) {
         entries += (first ? "" : " ") + to_string(entry.pos);
         entries += "(" + std::to_string(entry.left.first) + "," + std::to_string(entry.left.second) + ")";
         entries += "(" + std::to_string(entry.right.first) + "," + std::to_string(entry.right.second) + ")";
+        entries += "(" + std::to_string(entry.id) + "," + std::to_string(entry.left_id) + "," + std::to_string(entry.right_id) + ")";
         first = false;
     }
     os << entries;

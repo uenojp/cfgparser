@@ -9,7 +9,7 @@ std::ostream& operator<<(std::ostream& os, const Rule& rule) {
     return os;
 }
 
-Grammar::Grammar(const std::string& filename) : start(Pos::S), terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}) {
+Grammar::Grammar(const std::string& filename) : start(Pos::S), terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::VPa, Pos::PP, Pos::SS}) {
     load(filename);
 }
 

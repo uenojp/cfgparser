@@ -7,6 +7,7 @@ std::string to_string(const Pos& pos) {
         case Pos::S:    return "S";
         case Pos::NP:   return "NP";
         case Pos::VP:   return "VP";
+        case Pos::VPa:  return "VPa";
         case Pos::PP:   return "PP";
         case Pos::SS:   return "SS";
         case Pos::NOUN: return "NOUN";
@@ -23,6 +24,7 @@ Pos to_pos(const std::string& pos) {
     if (pos == "S")    return Pos::S;
     if (pos == "NP")   return Pos::NP;
     if (pos == "VP")   return Pos::VP;
+    if (pos == "VPa")  return Pos::VPa;
     if (pos == "PP")   return Pos::PP;
     if (pos == "SS")   return Pos::SS;
     if (pos == "NOUN") return Pos::NOUN;
@@ -39,7 +41,7 @@ bool is_terminal(const Pos& pos) {
 }
 
 bool is_nonterminal(const Pos& pos) {
-    return pos == Pos::S || pos == Pos::NP || pos == Pos::VP || pos == Pos::PP || pos == Pos::SS;
+    return pos == Pos::S || pos == Pos::NP || pos == Pos::VP || pos == Pos::VPa || pos == Pos::PP || pos == Pos::SS;
 }
 
 std::ostream& operator<<(std::ostream& os, const Pos& pos) {

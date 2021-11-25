@@ -8,6 +8,7 @@ enum class Pos {
     S,
     NP,
     VP,
+    VPa,
     PP,
     SS, /* 中間表現 */
     /* 品詞 */

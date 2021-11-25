@@ -9,11 +9,11 @@ std::ostream& operator<<(std::ostream& os, const Rule& rule) {
     return os;
 }
 
-Grammar::Grammar(const std::string& filename) : terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}), start(Pos::S) {
-    load_grammar(filename);
+Grammar::Grammar(const std::string& filename) : start(Pos::S), terminals(std::set<Pos>{Pos::NOUN, Pos::DET, Pos::VERB, Pos::ADJ, Pos::ADV, Pos::PREP}), nonterminals(std::set<Pos>{Pos::S, Pos::NP, Pos::VP, Pos::PP, Pos::SS}) {
+    load(filename);
 }
 
-bool Grammar::load_grammar(const std::string& filename) {
+bool Grammar::load(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;

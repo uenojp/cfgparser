@@ -80,6 +80,8 @@ class CkyParser {
     Lexicon lexicon; /* 単語辞書 */
 
     CkyParser(const Config& config) : grammar(Grammar(config.grammar)), lexicon(Lexicon(config.lexicon)) {}
+
+    /* 英文sentenceをパースし、正文の判定とS式の結果を返す */
     Result parse(const std::string& sentence);
 
     /* CKY表を出力する */

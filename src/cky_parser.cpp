@@ -126,7 +126,7 @@ void CkyParser::combine_cells(std::size_t i, std::size_t k, std::size_t j) {
 
 /* CKY表を表示(品詞のみ) */
 void CkyParser::show_table() {
-    const int cell_width = 12; /* セルの表示幅 */
+    const int cell_width = 8; /* セルの表示幅 */
     for (const auto &row : this->table) {
         for (const auto &cell : row) {
             bool first = true;

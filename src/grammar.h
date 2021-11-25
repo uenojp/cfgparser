@@ -31,12 +31,12 @@ std::ostream& operator<<(std::ostream& os, const Rule& other);
 class Grammar {
    private:
     /* 文法規則をファイルからロード */
-    bool load_grammar(const std::string& filename);
+    bool load(const std::string& filename);
 
    public:
+    const Pos start;                  /*初期記号 */
     const std::set<Pos> terminals;    /* 終端記号 */
     const std::set<Pos> nonterminals; /*非終端記号 */
-    const Pos start;                  /*初期記号 */
     std::set<Rule> rules;
 
     Grammar(const std::string& filename);

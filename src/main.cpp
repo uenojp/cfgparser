@@ -22,14 +22,14 @@ int main(int argc, char** argv) {
     auto result = parser.parse(sentence);
 
     /* CKY表を表示 */
-    parser.show_table_with_detail();
+    parser.show_table();
 
     if (result.ok) {
         std::cout << std::endl
                   << "\"" << sentence << "\" "
                   << "is the correct sentence." << std::endl;
 
-        std::cout << std::endl << "s expression" << std::endl << result.s_expression << std::endl;
+        std::cout << std::endl << "S expression" << std::endl << result.s_expression << std::endl;
     } else {
         std::cout << std::endl
                   << "\"" << sentence << "\" "
